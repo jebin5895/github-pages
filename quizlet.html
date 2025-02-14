@@ -1,0 +1,170 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class OSQuizlet extends JFrame {
+    private CardLayout cardLayout;
+    private JPanel mainPanel;
+
+    public OSQuizlet() {
+        setTitle("OS Midterm Quizlet");
+        setSize(800, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        cardLayout = new CardLayout();
+        mainPanel = new JPanel(cardLayout);
+
+        // Initial Document View Panel
+        JPanel documentPanel = new JPanel();
+        documentPanel.setLayout(new BoxLayout(documentPanel, BoxLayout.Y_AXIS));
+        documentPanel.setBackground(new Color(255, 182, 193)); // Hot pink background
+
+        JLabel header = new JLabel("<html><h1 style='color: #FF1493; font-size: 36px;'>OS Midterm Quizlet</h1>" +
+                "<p style='color: #FF69B4; font-size: 24px;'>Chapters 1, 2, 8, and 9</p>" +
+                "<p style='color: #FF69B4; font-size: 20px;'>Last Updated: February 14, 2025</p></html>");
+        header.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JButton linkButton = new JButton("GitHub Repo and Quizlet") {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setStroke(new BasicStroke(3));
+                g2d.setColor(new Color(255, 20, 147)); // Deep pink
+                g2d.drawRect(0, 0, getWidth()-1, getHeight()-1);
+            }
+        };
+        linkButton.setBackground(new Color(255, 240, 245)); // Lavender blush
+        linkButton.setFont(new Font("Arial", Font.BOLD, 18));
+        linkButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                linkButton.setForeground(new Color(255, 20, 147)); // Deep pink
+                linkButton.setBackground(new Color(255, 228, 225)); // Misty rose
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                linkButton.setForeground(Color.BLACK);
+                linkButton.setBackground(new Color(255, 240, 245)); // Lavender blush
+            }
+        });
+        linkButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        linkButton.addActionListener(e -> startTransformation());
+
+        documentPanel.add(Box.createRigidArea(new Dimension(0, 50)));
+        documentPanel.add(header);
+        documentPanel.add(Box.createRigidArea(new Dimension(0, 30)));
+        documentPanel.add(linkButton);
+
+        // Prank Content Panel
+        JPanel prankPanel = new JPanel();
+        prankPanel.setBackground(new Color(255, 105, 180)); // Even brighter pink
+        prankPanel.setLayout(new BoxLayout(prankPanel, BoxLayout.Y_AXIS));
+
+        JLabel prankTitle = new JLabel("<html><h1 style='color: #FF1493; font-size: 48px; text-shadow: 2px 2px #FFB6C1;'>SIKEEEE YOU THOUGHT LOLL 🤡</h1></html>") {
+            int bounce = 0;
+            boolean up = true;
+            Timer bounceTimer = new Timer(50, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (up) bounce++;
+                    else bounce--;
+                    if (bounce > 15) up = false;
+                    if (bounce < 0) up = true;
+                    setLocation(getX(), getY() + (up ? 2 : -2));
+                }
+            });
+            {
+                bounceTimer.start();
+            }
+        };
+        prankTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel prankMessage = new JLabel("<html><p style='color: white; font-size: 24px; text-align: center;'>" +
+                "Hey buddy,<br>You really believed this was some review deck LMAOO<br>" +
+                "It's okay, your time will \"eventually\" come too<br><br>" +
+                "P.S. You really thought goofyyyy !! 🤣</p></html>");
+        prankMessage.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JButton surpriseButton = new JButton("Click this for actually sweet messages! 🫶") {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2d = (Graphics2D) g;
+                GradientPaint gp = new GradientPaint(0, 0, new Color(255, 192, 203),
+                        getWidth(), getHeight(), new Color(255, 20, 147));
+                g2d.setPaint(gp);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+                super.paintComponent(g);
+            }
+        };
+        surpriseButton.setForeground(Color.WHITE);
+        surpriseButton.setFont(new Font("Arial", Font.BOLD, 18));
+        surpriseButton.setOpaque(false);
+        surpriseButton.setContentAreaFilled(false);
+        surpriseButton.setBorderPainted(false);
+        surpriseButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        surpriseButton.addActionListener(e -> showSurprise());
+
+        prankPanel.add(Box.createRigidArea(new Dimension(0, 50)));
+        prankPanel.add(prankTitle);
+        prankPanel.add(Box.createRigidArea(new Dimension(0, 30)));
+        prankPanel.add(prankMessage);
+        prankPanel.add(Box.createRigidArea(new Dimension(0, 30)));
+        prankPanel.add(surpriseButton);
+
+        mainPanel.add(documentPanel, "document");
+        mainPanel.add(prankPanel, "prank");
+
+        add(mainPanel);
+        cardLayout.show(mainPanel, "document");
+    }
+
+    private void startTransformation() {
+        Timer timer = new Timer(15, new ActionListener() {
+            float opacity = 1.0f;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                opacity -= 0.05f;
+                mainPanel.setOpaque(false);
+                mainPanel.repaint();
+                if (opacity <= 0) {
+                    ((Timer) e.getSource()).stop();
+                    cardLayout.show(mainPanel, "prank");
+                    Timer fadeIn = new Timer(15, new ActionListener() {
+                        float innerOpacity = 0.0f;
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            innerOpacity += 0.05f;
+                            mainPanel.setOpaque(true);
+                            mainPanel.repaint();
+                            if (innerOpacity >= 1.0f) {
+                                ((Timer) e.getSource()).stop();
+                            }
+                        }
+                    });
+                    fadeIn.start();
+                }
+            }
+        });
+        timer.start();
+    }
+
+    private void showSurprise() {
+        String[] surprises = {
+                "if this is abi reading this message, i am setting up the connection with Samuel now",
+                "I know deep down you still like him :) ",
+                "JUST ADMIT YOU STILL ARE DOWN BAD FOR HIM 💅"
+        };
+        String message = surprises[(int) (Math.random() * surprises.length)];
+        JOptionPane.showMessageDialog(this, message);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            OSQuizlet quiz = new OSQuizlet();
+            quiz.setVisible(true);
+        });
+    }
+}
